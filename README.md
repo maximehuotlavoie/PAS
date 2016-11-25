@@ -3,12 +3,12 @@ This repository contains modular functions and scripts to import, process, plot 
 
 **Repository Contents:**
 
-General Files:< /br>
-1. README.md - General information about the repository and things to read.< /br>
+General Files:  
+1. README.md - General information about the repository and things to read.  
 
-Functions:< /br>
-1. TDT_import.m - This function imports TDT Data from Raw Data Tank Format.< /br>
-2. TDT_preproc.m - This function does basic processing on TDT structures created in TDT_import.< /br>
+Functions:
+1. TDT_import.m - This function imports TDT Data from Raw Data Tank Format.  
+2. TDT_preproc.m - This function does basic processing on TDT structures created in TDT_import.  
 
 Coding Conventions:
 * Each file should have a header dictating the type of code, file name, names of contributors and mm/yy of last update, purpose of the code, and feature list
