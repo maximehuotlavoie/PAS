@@ -2,21 +2,7 @@
 % Windsor Ting, Oct 2016
 % Purpose: To import TDT Data into a matlab structure for further
 % processing
-function [ PRE_tdtstructure, POST_tdtstructure ] = preprocessing( PREfolderpath, POSTfolderpath )
-% Function header. a function called 'preprocessing' is created which takes inpur 
-% arguments 'PREfolderpath' and 'POSTfolderpath', determined from user
-% input, and outputs 'PRE_tdtstructure' and 'POST_tdtstructure'. 
-    global PREfolderpath
-    global POSTfolderpath
-    global PRE_tdtstructure
-    global POST_tdtstructure
-% Global variable declaration to ensure crosstalk of variables between this
-% function and global workspace
-%     PRE_tdtstructure = TDT2mat('C:\Users\User\Documents\')
-%     POST_tdtstructure = TDT2mat('C:\Users\User\Documents\')
-% DEBUG MODE for TDT_import. Skips the user input and feeds a sample
-% dataset
-    
+function [ PRE_tdtstructure, POST_tdtstructure ] = TDT_import( )  
     instructionsdialog = msgbox('In the following two dialog boxes, please select the path of the PRE and POST TDT data folders, respectively. The plots will appear as pop ups and the statistics in the command window below')
 % Create a user notice box giving instructions    
     waitfor(instructionsdialog)
