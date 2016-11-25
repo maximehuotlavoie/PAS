@@ -6,7 +6,7 @@ This repository contains modular functions and scripts to import, process, plot 
 General Files:  
 1. README.md - General information about the repository and things to read.  
 
-Functions:
+Functions:  
 1. TDT_import.m - This function imports TDT Data from Raw Data Tank Format.  
 2. TDT_preproc.m - This function does basic processing on TDT structures created in TDT_import.  
 
