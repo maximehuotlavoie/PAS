@@ -61,10 +61,10 @@ function [ ] = EMG_plot (PRE_tdtstructure, POST_tdtstructure)
     ylim([-ymax/10 ymax]);
     % set the limit of the y-axis to be bounded between the negative of
     % the ymax variable divided by 10, and ymax. 
-    % xlabel('time (s)'); ylabel('mean rect EMG (uV?)');
+    xlabel('time (s)'); ylabel('Mean Rectified EMG Signal (V)');
     % label the x axis to be time in seconds, and the y label to be
     % mean rectified EMG signal in uV
-    % title(strrep(sprintf('mean rect EMG ch %d, file %s',ch,PRE_tdtstructure.info.blockname),'_','\_'));
+    title(strrep(sprintf('Mean Rect EMG ch %d, file %s',ch,PRE_tdtstructure.info.blockname),'_','\_'));
     % plot the title of the graph as 'mean rect EMG channel number file
     % name block name and two spaces. 
     end % end channel for loop

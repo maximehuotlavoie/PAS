@@ -9,6 +9,7 @@ General Files:
 Functions:  
 1. TDT_import.m - This function imports TDT Data from Raw Data Tank Format.  
 2. TDT_preproc.m - This function does basic processing on TDT structures created in TDT_import.  
+3. EMG_plot.m - This function plots both the PRE and POST EMG Dataset on the same axes, with timescale in ms on the abscissa and EMG voltage in V on the ordinate.  
 
 Coding Conventions:
 * Each file should have a header dictating the type of code, file name, names of contributors and mm/yy of last update, purpose of the code, and feature list
