@@ -17,7 +17,7 @@
 function [ mean_rect_EMGs, lowerbound, upperbound, zerobound, num_chan, time_axis ] = TDT_preproc( PRE_tdtstructure, POST_tdtstructure, userlower, userupper )
     % Assign the variable StS_names to field names extracted from the snip
     % segments in the TDT data.
-    StS_names = fieldnames(PRE_tdtstructure.snips); 
+    StS_names = fieldnames(PRE_tdtstructure.snips);
     % Error handling for multiple strobe signals
     if length(StS_names) > 1 
         % if there are multiple names:  
@@ -69,7 +69,7 @@ function [ mean_rect_EMGs, lowerbound, upperbound, zerobound, num_chan, time_axi
     upperbound = find(time_axis<=userupper,1,'last');
     zerobound = find(time_axis>=0,1,'first');
     % tailors 'mean_rect_EMGs' to lower and upper bound
-    mean_rect_EMGs = mean_rect_EMGs(lowerbound:upperbound,:);
+    % mean_rect_EMGs = mean_rect_EMGs(lowerbound:upperbound,:);
     
 end
 

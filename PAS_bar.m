@@ -6,29 +6,29 @@
 % INPUTS: EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, norm
 % OUTPUTS: [Figure: A bar graph]
 
-function [ ] = PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, norm )
+function [ ] = PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, norm, analyzestimdur )
     % Initiate figure base
     figure;
     % pair pre and post mean and SEM summary variables
     y = [EMG_prevalues_meanSEM(1,:) ; EMG_postvalues_meanSEM(1,:)]; 
     % transpose
-    y = y'
+    y = y';
     % paired labels
     x1 = [1 1; 2 2; 3 3; 4 4];
     delta = 0.14;
     hold on;
     % plot bar graph with facecolor, edgecolor and linewidth params
-    bar(y,'FaceColor',[1 1 0],'EdgeColor',[0 0 0],'LineWidth',0.5);
+    bar(y,'FaceColor','w','EdgeColor',[0 0 0],'LineWidth',0.5);
     % plot error bar overlays with SEMs
     errorbar((x1(:,1)-delta),y(:,1),EMG_prevalues_meanSEM(2,:),'.');
     errorbar((x1(:,2)+delta),y(:,2),EMG_postvalues_meanSEM(2,:),'.');
     % write appropriate title overlay depending on what is plotted. 
-    if norm == 'Y'
+    if norm == 1
         title(strrep(sprintf('Normalized Effect of PAS on EMG Response'),'_','\_'));
         xlabel('Channel'); ylabel('Mean Rectified EMG Signal (V)');
-    else
+    elseif norm == 0
         xlabel('Channel'); ylabel('Mean Normalized Rectified EMG Signal (V)');
         title(strrep(sprintf('Effect of PAS on EMG Response'),'_','\_'));
     end
     % write x label
-    
+

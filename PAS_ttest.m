@@ -3,12 +3,12 @@
 % Purpose: Performs T Test
 % INPUTS: mean_rect_EMGs, mean_norm_rect_EMGs, norm
 % OUTPUTS: ttestresults (results of paired t test analysis)
-function [ ttestresults ] = PAS_ttest( mean_rect_EMGs, mean_norm_rect_EMGs, norm )
+function [ ttestresults ] = PAS_ttest( mean_rect_EMGs, mean_norm_rect_EMGs, norm, analyzestimdur )
     % separates pre and post data
     PRE = mean_rect_EMGs(:,[1,2,3,4]);
     POST = mean_rect_EMGs(:,[5,6,7,8]);
     % if normalization param is requested, then use normalized dataset
-    if norm == 'Y'
+    if norm == 1
         PRE = mean_norm_rect_EMGs(:,[1,2,3,4]);
         POST = mean_norm_rect_EMGs(:,[5,6,7,8]);
     end

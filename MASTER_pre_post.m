@@ -3,10 +3,13 @@
 % (C) 2016 Dec; C Ethier, W Ting
 
 % Import TDT Data from User Specified Directory and Place in a TDT Structure
-[ PRE_tdtstructure, POST_tdtstructure ] = TDT_import( );
+imported = exist('PRE_tdtstructure');
+if imported == 0
+    [ PRE_tdtstructure, POST_tdtstructure ] = TDT_import( );
+end
 
 % Allows the user to specify desired initial params 
-[ userlower, userupper, usernumberchannel, norm ] = PAS_initparams( );
+[ userlower, userupper, usernumberchannel, norm, stimdur, analyzestimdur ] = PAS_initparams( );
 
 % Preprocesses TDT data for further analysis
 [ mean_rect_EMGs, lowerbound, upperbound, zerobound, num_chan, time_axis ] = TDT_preproc ( PRE_tdtstructure, POST_tdtstructure, userlower, userupper );
@@ -27,5 +30,9 @@ PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, norm );
 [ PASTable ] = PAS_resultstable ( ttestresults, EMG_prevalues_meanSEM, EMG_postvalues_meanSEM );
 
 % Plot EMG values on time axis for each channel, for the timeframe
-% specified. 
+% specified.
 EMG_plot ( PRE_tdtstructure, POST_tdtstructure, mean_norm_rect_EMGs, norm, lowerbound, upperbound );
+
+% Save analysis workspace as PASanalysis.mat in the working directory for
+% auditing
+save('PASanalysis.mat');

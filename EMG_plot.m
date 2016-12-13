@@ -39,8 +39,8 @@ function [ ] = EMG_plot (PRE_tdtstructure, POST_tdtstructure, mean_norm_rect_EMG
         mean_rect_EMGs_post(:,ch) = abs(mean(StS_post.data(ch_idx,:),1))'; 
     end
     % separate pre and post data
-    mean_norm_rect_EMGs_pre = mean_norm_rect_EMGs(:,(1:4))
-    mean_norm_rect_EMGs_post = mean_norm_rect_EMGs(:,(5:8))
+    mean_norm_rect_EMGs_pre = mean_norm_rect_EMGs(:,(1:4));
+    mean_norm_rect_EMGs_post = mean_norm_rect_EMGs(:,(5:8));
     % get epoch names from the epocs section from the TDT structure
     epoc_names =  fieldnames(PRE_tdtstructure.epocs);
     % compare 'epoc_names' and 'stim' to see if the strings are identical, and store the result [1] if they are the same and [0] if they are different in the variable 'stim_field'
@@ -62,16 +62,18 @@ function [ ] = EMG_plot (PRE_tdtstructure, POST_tdtstructure, mean_norm_rect_EMG
     % and subtracting from 'time_bin'. 
     time_axis = pre_stim_t:time_bin:(pre_stim_t+(num_data_pts*time_bin)-time_bin); 
     % splice 'time_axis', 'mean_rect_EMGs_pre' and post for lower bound and upper bound
-    time_axis = time_axis(1,[lowerbound:upperbound])
-    mean_rect_EMGs_pre = mean_rect_EMGs_pre([lowerbound:upperbound],:)
-    mean_rect_EMGs_post = mean_rect_EMGs_post([lowerbound:upperbound],:)
+     %time_axis = time_axis(1,[lowerbound:upperbound]);
+     %mean_rect_EMGs_pre = mean_rect_EMGs_pre([lowerbound:upperbound],:);
+     %mean_rect_EMGs_post = mean_rect_EMGs_post([lowerbound:upperbound],:);
+     %mean_norm_rect_EMGs_pre = mean_norm_rect_EMGs_pre([lowerbound:upperbound],:);
+     %mean_norm_rect_EMGs_post = mean_norm_rect_EMGs_post([lowerbound:upperbound],:);
     % the maximum y value will equal the maximum of the maximum of mean_rect_EMGs across all channels
     ymax = max(max(mean_rect_EMGs_pre));
     % for loop, iterating plot from channel 1 to the total number of channels
     for ch=1:num_chan 
     figure; 
     % if user specifies plot without normalized data
-    if norm == 'N'
+    if norm == 0
         % make a plot of pre EMG data, with time_axis on the abscissa and mean_rect_EMGs_pre on the ordinate
         plot(time_axis,mean_rect_EMGs_pre(:,ch));
         % hold the plot so that the post data can be overlaid on top
@@ -79,7 +81,7 @@ function [ ] = EMG_plot (PRE_tdtstructure, POST_tdtstructure, mean_norm_rect_EMG
         % make a plot of the post EMG data, with time_axis on the abscissa and mean_rec_EMGs_post on the ordinate
         plot(time_axis,mean_rect_EMGs_post(:,ch)); 
     % if user specifies plot with normalized data
-    elseif norm == 'Y'
+    elseif norm == 1
         % same idea as above for the normed data
         plot(time_axis,mean_norm_rect_EMGs_pre(:,ch)); 
         hold on; 
@@ -88,14 +90,15 @@ function [ ] = EMG_plot (PRE_tdtstructure, POST_tdtstructure, mean_norm_rect_EMG
     % set the limit of the y-axis to be bounded between the negative of
     % the ymax variable divided by 10, and ymax. 
     ylim([-ymax/10 ymax]);
+    legend('pre','post')
     % label the x axis to be time in seconds, and the y label to be
     % mean rectified EMG signal in V
     % Labels appropriately based on whether normed or non normed data is
     % used
-    if norm == 'N'
+    if norm == 0
         xlabel('time (s)'); ylabel('Mean Rectified EMG Signal (V)');     
         title(strrep(sprintf('Mean Rect EMG ch %d, file %s',ch,PRE_tdtstructure.info.blockname),'_','\_'));
-    elseif norm == 'Y'
+    elseif norm == 1
         xlabel('time (s)'); ylabel('Mean Normalized Rectified EMG Signal (V)');
         title(strrep(sprintf('Mean Normalized Rect EMG ch %d, file %s',ch,PRE_tdtstructure.info.blockname),'_','\_'));
     end
