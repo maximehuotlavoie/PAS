@@ -3,7 +3,7 @@
 % Purpose: Performs T Test
 % INPUTS: mean_rect_EMGs, mean_norm_rect_EMGs, norm
 % OUTPUTS: ttestresults (results of paired t test analysis)
-function [ ttestresults ] = PAS_ttest_CE ( EMGs_pre, EMGs_POST )
+function [ ttestresults ] = PAS_ttest ( EMGs_pre, EMGs_POST )
 
         num_chan = size(EMGs_pre,2);
         ttestresults = nan(2,num_chan);

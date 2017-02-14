@@ -6,7 +6,7 @@
 % INPUTS: EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, norm
 % OUTPUTS: [Figure: A bar graph]
 
-function [ ] = PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, rem_baseline_flag, blockname_pre, num_chan )
+function [ ] = PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, rem_baseline_flag, blockname_pre, blockname_post, num_chan )
     % Initiate figure base
     figure;
     % pair pre and post mean and SEM summary variables
@@ -26,8 +26,9 @@ function [ ] = PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, rem_base
     hold on;
     
     % plot bar graph with facecolor, edgecolor and linewidth params
-    bar(y,'FaceColor','w','EdgeColor',[0 0 0],'LineWidth',0.5);
-    
+    bar(y,'EdgeColor',[0 0 0],'LineWidth',0.5);
+    hold on;
+    b = bar(y,'EdgeColor',[0 0 0],'LineWidth',0.5);
     
     % plot error bar overlays with SEMs
     errorbar((x1(:,1)-errorbarxoffset),y(:,1), 2 * EMG_prevalues_meanSEM(2,:),'.');
@@ -42,10 +43,17 @@ function [ ] = PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, rem_base
         title(strrep(sprintf('Effect of PAS on EMG Response'),'_','\_'));
     end
     
-    legend('Pre-PAS', 'Post-PAS');
+    l = cell(1,2);
+    l{1}='Pre PAS'; l{2}='Post PAS';    
+    legend(b,l);
     
-    % write x label
-    saveas(gcf, [blockname_pre 'bar.svg']);
+    SEMlabel = 'E. bars = +/-2.0 SEM';
+    dim = [.62 .5 .3 .3];
+    annotation('textbox',dim,'String',SEMlabel,'FitBoxToText','on');
+        
+    % legend('Pre-PAS','Post-PAS');
+    
+    saveas(gcf, [blockname_pre blockname_post 'bar.svg']);
     
 end
 

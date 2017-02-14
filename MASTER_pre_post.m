@@ -18,23 +18,23 @@ function result_struct = MASTER_pre_post(pre_data, post_data)
     % [ chspec ] = PAS_chspec();
 
     % Proprocesses the data and removes baseline signal if flagged.
-    [ mean_rect_EMGs_pre, sd_rect_EMGs_pre, time_axis, evoked_EMGs_pre, blockname_pre, num_chan ]       = TDT_preproc ( pre_data, rem_baseline_flag, userlower,userupper, analyzestimdur);
-    [ mean_rect_EMGs_post, sd_rect_EMGs_post , time_axis, evoked_EMGs_post, blockname_post, num_chan ]  = TDT_preproc ( post_data, rem_baseline_flag, userlower,userupper, analyzestimdur );
+    [ mean_rect_EMGs_pre, sd_rect_EMGs_pre, time_axis, evoked_EMGs_pre, blockname_pre, num_chan ]       = TDT_preproc ( pre_data, rem_baseline_flag, userlower, userupper, analyzestimdur);
+    [ mean_rect_EMGs_post, sd_rect_EMGs_post , time_axis, evoked_EMGs_post, blockname_post, num_chan ]  = TDT_preproc ( post_data, rem_baseline_flag, userlower, userupper, analyzestimdur);
 
     % Completes Two-Tailed T Test
     [ ttestresults ] = PAS_ttest ( evoked_EMGs_pre, evoked_EMGs_post );
 
     % Summarizes data in terms of means and standard error of the means
-    [ EMG_prevalues_meanSEM , EMG_postvalues_meanSEM ] = PAS_datasummary ( mean_rect_EMGs_pre, mean_rect_EMGs_post );
+    [ EMG_prevalues_meanSEM , EMG_postvalues_meanSEM ] = PAS_datasummary ( evoked_EMGs_pre, evoked_EMGs_post );
 
     % Plot bar graph 
-    PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, rem_baseline_flag, blockname_pre, num_chan );
+    PAS_bar ( EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, rem_baseline_flag, blockname_pre, blockname_post, num_chan );
 
     % Create a summary results table
     % [ PASTable ] = PAS_resultstable ( ttestresults, EMG_prevalues_meanSEM, EMG_postvalues_meanSEM );
   
     % Plot EMG values on time axis for each channel
-    EMG_plot( mean_rect_EMGs_pre, sd_rect_EMGs_pre, mean_rect_EMGs_post,sd_rect_EMGs_post, time_axis, blockname_pre, blockname_post, EMG_vect );
+    EMG_plot ( mean_rect_EMGs_pre, sd_rect_EMGs_pre, mean_rect_EMGs_post, sd_rect_EMGs_post, time_axis, blockname_pre, blockname_post, EMG_vect );
 
     %     Save analysis workspace as PASanalysis.mat in the working directory
     %     save('PASanalysis.mat');

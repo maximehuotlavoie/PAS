@@ -41,7 +41,7 @@ function [ save_path, num_data_files, tdt_struct ] = TDT_import(varargin)
         % TODO: check file extension if it really looks like a data tank
         file_name = data_dir(dir_idx(f)).name;
         
-        tdt_struct = TDT2mat(fullfile(data_dir(dir_idx(f)).folder,file_name));
+        tdt_struct = TDT2mat(fullfile(folderpath,file_name));
    
         %TODO: make saved structure names to match folder name and file
         %names

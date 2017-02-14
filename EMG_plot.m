@@ -38,8 +38,8 @@ function [ ] = EMG_plotCE ( EMGs_pre, sd_EMGs_pre, EMGs_post, sd_EMGs_post, time
         title(strrep(sprintf('Mean Rect EMG ch %d, Pre: %s   Post: %s',ch,blockname_pre, blockname_post),'_','\_'));
         
         set(gcf,'renderer','painters');
-        saveas(gcf, [blockname_pre '_ch' num2str(ch) '_EMG.svg']);
-        savefig(gcf, [blockname_pre '_ch' num2str(ch) '_EMG.fig']);
+        saveas(gcf, [blockname_pre blockname_post '_ch' num2str(ch) '_EMG.svg']);
+        savefig(gcf, [blockname_pre blockname_post '_ch' num2str(ch) '_EMG.fig']);
     end
 
 end

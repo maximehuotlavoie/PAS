@@ -14,7 +14,7 @@
 % time_axis); num_chan (number of channels specified by TDT data);
 % time_axis (horizontal vector with times concordant with the data points
 % collected in the TDT data).
-function [ mean_rect_EMGs, sd_rect_EMGs, time_axis, evoked_EMGs, blockname, num_chan] = TDT_preproc_CE ( tdt_struct, rem_baseline_flag, userlower,userupper, analyzestimdur )
+function [ mean_rect_EMGs, sd_rect_EMGs, time_axis, evoked_EMGs, blockname, num_chan] = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur )
     
 
     % extract basic info from data structure
