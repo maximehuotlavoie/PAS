@@ -75,11 +75,17 @@ function [ mean_rect_EMGs, sd_rect_EMGs, time_axis, evoked_EMGs, blockname, num_
     for ch = 1:num_chan
         % channel ID will be assigned a value of 1 if 'ch' == the channel number in this loop iteration 
         ch_idx = StS.chan(:,1)==ch;
+        
         % calculate the mean rectified EMG signal for all channels
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
+        
+        %plot all individual EMG responses to manually verify no artifact/weird stuff
+        all_evoked_EMGs = validate_EMG_responses(all_evoked_EMGs);
+        
         if rem_baseline_flag
             all_evoked_EMGs = rem_baseline(zerobound,all_evoked_EMGs);
         end
+
         mean_rect_EMGs(:,ch) = mean(all_evoked_EMGs,1)';
         sd_rect_EMGs(:,ch)   = std(all_evoked_EMGs,0,1)';
         evoked_EMGs(:,ch) = mean(all_evoked_EMGs(:,analyzetimeframe),2);
