@@ -1,5 +1,5 @@
 % FUNCTION: TDT_preproc.m
-% C Ethier, W Ting Dec 2016
+% C Ethier, W Ting Feb 2017
 % Purpose: To preprocess TDT structure for later analysis.
 % Features:
 % 1. Specify the analysis' desired time range.
@@ -14,8 +14,7 @@
 % time_axis); num_chan (number of channels specified by TDT data);
 % time_axis (horizontal vector with times concordant with the data points
 % collected in the TDT data).
-function [ mean_rect_EMGs, sd_rect_EMGs, time_axis, evoked_EMGs, blockname, num_chan] = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur )
-    
+function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur )
 
     % extract basic info from data structure
     StS_names = fieldnames(tdt_struct.snips);
@@ -75,21 +74,25 @@ function [ mean_rect_EMGs, sd_rect_EMGs, time_axis, evoked_EMGs, blockname, num_
     for ch = 1:num_chan
         % channel ID will be assigned a value of 1 if 'ch' == the channel number in this loop iteration 
         ch_idx = StS.chan(:,1)==ch;
-        
         % calculate the mean rectified EMG signal for all channels
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
         
-        %plot all individual EMG responses to manually verify no artifact/weird stuff
-        all_evoked_EMGs = validate_EMG_responses(all_evoked_EMGs);
-        
         if rem_baseline_flag
-            all_evoked_EMGs = rem_baseline(zerobound,all_evoked_EMGs);
+            [all_evoked_EMGs, baseline_mean] = rem_baseline(zerobound,all_evoked_EMGs);
         end
 
+        all_evoked_EMGs = PAS_validate_EMG_responses(all_evoked_EMGs, time_axis, ch, baseline_mean);
         mean_rect_EMGs(:,ch) = mean(all_evoked_EMGs,1)';
         sd_rect_EMGs(:,ch)   = std(all_evoked_EMGs,0,1)';
         evoked_EMGs(:,ch) = mean(all_evoked_EMGs(:,analyzetimeframe),2);
     end
+    
+    processed_data = struct('mean_rect_EMGs',   mean_rect_EMGs, ...
+                            'sd_rect_EMGs',     sd_rect_EMGs,...
+                            'time_axis',        time_axis,...
+                            'evoked_EMGs',      evoked_EMGs,...
+                            'blockname',        blockname,...
+                            'num_chan',         num_chan);
     
 
 end
