@@ -1,5 +1,5 @@
 % FUNCTION: TDT_preproc.m
-% C Ethier, W Ting Feb 2017
+% C Ethier, W Ting, 2017
 % Purpose: To preprocess TDT structure for later analysis.
 % Features:
 % 1. Specify the analysis' desired time range.
@@ -40,7 +40,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     num_stim       = num_rows/num_chan;
     mean_rect_EMGs = nan(num_data_pts,num_chan);
     sd_rect_EMGs   = nan(num_data_pts,num_chan);
-    evoked_EMGs    = nan(num_stim,num_chan);
+    evoked_EMGs    = cell(1,num_chan);
     
     % obtain stim onset time
     stim_epoc  = getfield(tdt_struct.epocs,epoc_names{stim_field}); 
@@ -78,13 +78,16 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
         
         if rem_baseline_flag
+            baseline_mean = mean(all_evoked_EMGs(:,1:zerobound),2);
+            [all_evoked_EMGs, breakflag] = PAS_validate_EMG_responses(all_evoked_EMGs, time_axis, ch, baseline_mean);
             [all_evoked_EMGs, baseline_mean] = rem_baseline(zerobound,all_evoked_EMGs);
+        else
+            [all_evoked_EMGs, breakflag] = PAS_validate_EMG_responses(all_evoked_EMGs, time_axis, ch, baseline_mean);
         end
-
-        all_evoked_EMGs = PAS_validate_EMG_responses(all_evoked_EMGs, time_axis, ch, baseline_mean);
+        
         mean_rect_EMGs(:,ch) = mean(all_evoked_EMGs,1)';
         sd_rect_EMGs(:,ch)   = std(all_evoked_EMGs,0,1)';
-        evoked_EMGs(:,ch) = mean(all_evoked_EMGs(:,analyzetimeframe),2);
+        evoked_EMGs{ch} = mean(all_evoked_EMGs(:,analyzetimeframe),2);
     end
     
     processed_data = struct('mean_rect_EMGs',   mean_rect_EMGs, ...
@@ -92,7 +95,8 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
                             'time_axis',        time_axis,...
                             'evoked_EMGs',      evoked_EMGs,...
                             'blockname',        blockname,...
-                            'num_chan',         num_chan);
+                            'num_chan',         num_chan,...
+                            'breakflag',        breakflag);
     
 
 end
