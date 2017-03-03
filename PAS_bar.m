@@ -16,9 +16,9 @@ function [ ] = PAS_bar ( rem_baseline_flag, varargin )
         post = [mean(varargin{2}(1).evoked_EMGs(:,1)) ; mean(varargin{2}(2).evoked_EMGs(:,1)); mean(varargin{2}(3).evoked_EMGs(:,1)); mean(varargin{2}(4).evoked_EMGs(:,1)); mean(varargin{2}(5).evoked_EMGs(:,1)); mean(varargin{2}(6).evoked_EMGs(:,1))]';
         y = vertcat (pre, post);
         
-        preSD = [std(varargin{1}(1).evoked_EMGs(:,1)) ; std(varargin{1}(2).evoked_EMGs(:,1)); std(varargin{1}(3).evoked_EMGs(:,1)); std(varargin{1}(4).evoked_EMGs(:,1)); std(varargin{1}(5).evoked_EMGs(:,1)); std(varargin{1}(6).evoked_EMGs(:,1))]';
-        postSD = [std(varargin{2}(1).evoked_EMGs(:,1)) ; std(varargin{2}(2).evoked_EMGs(:,1)); std(varargin{2}(3).evoked_EMGs(:,1)); std(varargin{2}(4).evoked_EMGs(:,1)); std(varargin{2}(5).evoked_EMGs(:,1)); std(varargin{2}(6).evoked_EMGs(:,1))]';
-        z = vertcat (preSD, postSD);
+        preSEM = [(std(varargin{1}(1).evoked_EMGs(:,1)))/sqrt(size((varargin{1}(1).evoked_EMGs),1)) ; std(varargin{1}(2).evoked_EMGs(:,1))/sqrt(size((varargin{1}(2).evoked_EMGs),1)) ; std(varargin{1}(3).evoked_EMGs(:,1))/sqrt(size((varargin{1}(3).evoked_EMGs),1)) ; std(varargin{1}(4).evoked_EMGs(:,1))/sqrt(size((varargin{1}(4).evoked_EMGs),1)) ; std(varargin{1}(5).evoked_EMGs(:,1))/sqrt(size((varargin{1}(5).evoked_EMGs),1)) ; std(varargin{1}(6).evoked_EMGs(:,1))/sqrt(size((varargin{1}(6).evoked_EMGs),1)) ]';
+        postSEM = [std(varargin{2}(1).evoked_EMGs(:,1))/sqrt(size((varargin{2}(1).evoked_EMGs),1))  ; std(varargin{2}(2).evoked_EMGs(:,1))/sqrt(size((varargin{2}(2).evoked_EMGs),1)) ; std(varargin{2}(3).evoked_EMGs(:,1))/sqrt(size((varargin{2}(3).evoked_EMGs),1)) ; std(varargin{2}(4).evoked_EMGs(:,1))/sqrt(size((varargin{2}(4).evoked_EMGs),1)) ; std(varargin{2}(5).evoked_EMGs(:,1))/sqrt(size((varargin{2}(5).evoked_EMGs),1)) ; std(varargin{2}(6).evoked_EMGs(:,1))/sqrt(size((varargin{2}(6).evoked_EMGs),1)) ]';
+        z = vertcat (preSEM, postSEM);
         
     elseif nargin == 6 % THIS IS THE CHRONIC PAS PROTOCOL
     
@@ -29,12 +29,12 @@ function [ ] = PAS_bar ( rem_baseline_flag, varargin )
         post3 = [mean(varargin{5}(1).evoked_EMGs(:,1)) ; mean(varargin{5}(2).evoked_EMGs(:,1)); mean(varargin{5}(3).evoked_EMGs(:,1)); mean(varargin{5}(4).evoked_EMGs(:,1)); mean(varargin{5}(5).evoked_EMGs(:,1)); mean(varargin{5}(6).evoked_EMGs(:,1))]';
         y = vertcat (pre1, pre2, post1, post2, post3); %combine all the above ones together.
         
-        pre1SD = [std(varargin{1}(1).evoked_EMGs(:,1)) ; std(varargin{1}(2).evoked_EMGs(:,1)); std(varargin{1}(3).evoked_EMGs(:,1)); std(varargin{1}(4).evoked_EMGs(:,1)); std(varargin{1}(5).evoked_EMGs(:,1)); std(varargin{1}(6).evoked_EMGs(:,1))]';
-        pre2SD = [std(varargin{2}(1).evoked_EMGs(:,1)) ; std(varargin{2}(2).evoked_EMGs(:,1)); std(varargin{2}(3).evoked_EMGs(:,1)); std(varargin{2}(4).evoked_EMGs(:,1)); std(varargin{2}(5).evoked_EMGs(:,1)); std(varargin{2}(6).evoked_EMGs(:,1))]';
-        post1SD = [std(varargin{3}(1).evoked_EMGs(:,1)) ; std(varargin{3}(2).evoked_EMGs(:,1)); std(varargin{3}(3).evoked_EMGs(:,1)); std(varargin{3}(4).evoked_EMGs(:,1)); std(varargin{3}(5).evoked_EMGs(:,1)); std(varargin{3}(6).evoked_EMGs(:,1))]';
-        post2SD = [std(varargin{4}(1).evoked_EMGs(:,1)) ; std(varargin{4}(2).evoked_EMGs(:,1)); std(varargin{4}(3).evoked_EMGs(:,1)); std(varargin{4}(4).evoked_EMGs(:,1)); std(varargin{4}(5).evoked_EMGs(:,1)); std(varargin{4}(6).evoked_EMGs(:,1))]';
-        post3SD = [std(varargin{5}(1).evoked_EMGs(:,1)) ; std(varargin{5}(2).evoked_EMGs(:,1)); std(varargin{5}(3).evoked_EMGs(:,1)); std(varargin{5}(4).evoked_EMGs(:,1)); std(varargin{5}(5).evoked_EMGs(:,1)); std(varargin{5}(6).evoked_EMGs(:,1))]';
-        z = vertcat (pre1SD, pre2SD, post1SD, post2SD, post3SD); %combine all the above ones together.
+        pre1SEM = [(std(varargin{1}(1).evoked_EMGs(:,1)))/sqrt(size((varargin{1}(1).evoked_EMGs),1)) ; std(varargin{1}(2).evoked_EMGs(:,1))/sqrt(size((varargin{1}(2).evoked_EMGs),1)) ; std(varargin{1}(3).evoked_EMGs(:,1))/sqrt(size((varargin{1}(3).evoked_EMGs),1)) ; std(varargin{1}(4).evoked_EMGs(:,1))/sqrt(size((varargin{1}(4).evoked_EMGs),1)) ; std(varargin{1}(5).evoked_EMGs(:,1))/sqrt(size((varargin{1}(5).evoked_EMGs),1)) ; std(varargin{1}(6).evoked_EMGs(:,1))/sqrt(size((varargin{1}(6).evoked_EMGs),1)) ]';
+        pre2SEM = [std(varargin{2}(1).evoked_EMGs(:,1))/sqrt(size((varargin{2}(1).evoked_EMGs),1))  ; std(varargin{2}(2).evoked_EMGs(:,1))/sqrt(size((varargin{2}(2).evoked_EMGs),1)) ; std(varargin{2}(3).evoked_EMGs(:,1))/sqrt(size((varargin{2}(3).evoked_EMGs),1)) ; std(varargin{2}(4).evoked_EMGs(:,1))/sqrt(size((varargin{2}(4).evoked_EMGs),1)) ; std(varargin{2}(5).evoked_EMGs(:,1))/sqrt(size((varargin{2}(5).evoked_EMGs),1)) ; std(varargin{2}(6).evoked_EMGs(:,1))/sqrt(size((varargin{2}(6).evoked_EMGs),1)) ]';
+        post1SEM = [std(varargin{3}(1).evoked_EMGs(:,1))/sqrt(size((varargin{3}(1).evoked_EMGs),1))  ; std(varargin{3}(2).evoked_EMGs(:,1))/sqrt(size((varargin{3}(2).evoked_EMGs),1)) ; std(varargin{3}(3).evoked_EMGs(:,1))/sqrt(size((varargin{3}(3).evoked_EMGs),1)) ; std(varargin{3}(4).evoked_EMGs(:,1))/sqrt(size((varargin{3}(4).evoked_EMGs),1)) ; std(varargin{3}(5).evoked_EMGs(:,1))/sqrt(size((varargin{3}(5).evoked_EMGs),1)) ; std(varargin{3}(6).evoked_EMGs(:,1))/sqrt(size((varargin{3}(6).evoked_EMGs),1)) ]';
+        post2SEM = [std(varargin{4}(1).evoked_EMGs(:,1))/sqrt(size((varargin{4}(1).evoked_EMGs),1))  ; std(varargin{4}(2).evoked_EMGs(:,1))/sqrt(size((varargin{4}(2).evoked_EMGs),1)) ; std(varargin{4}(3).evoked_EMGs(:,1))/sqrt(size((varargin{4}(3).evoked_EMGs),1)) ; std(varargin{4}(4).evoked_EMGs(:,1))/sqrt(size((varargin{4}(4).evoked_EMGs),1)) ; std(varargin{4}(5).evoked_EMGs(:,1))/sqrt(size((varargin{4}(5).evoked_EMGs),1)) ; std(varargin{4}(6).evoked_EMGs(:,1))/sqrt(size((varargin{4}(6).evoked_EMGs),1)) ]';
+        post3SEM = [std(varargin{5}(1).evoked_EMGs(:,1))/sqrt(size((varargin{5}(1).evoked_EMGs),1))  ; std(varargin{5}(2).evoked_EMGs(:,1))/sqrt(size((varargin{5}(2).evoked_EMGs),1)) ; std(varargin{5}(3).evoked_EMGs(:,1))/sqrt(size((varargin{5}(3).evoked_EMGs),1)) ; std(varargin{5}(4).evoked_EMGs(:,1))/sqrt(size((varargin{5}(4).evoked_EMGs),1)) ; std(varargin{5}(5).evoked_EMGs(:,1))/sqrt(size((varargin{5}(5).evoked_EMGs),1)) ; std(varargin{5}(6).evoked_EMGs(:,1))/sqrt(size((varargin{5}(6).evoked_EMGs),1)) ]';
+        z = vertcat (pre1SEM, pre2SEM, post1SEM, post2SEM, post3SEM); %combine all the above ones together.
         
     end
     
@@ -72,19 +72,19 @@ function [ ] = PAS_bar ( rem_baseline_flag, varargin )
     
     if nargin == 3 % THIS IS THE PRE-POST ACUTE PROTOCOL
     % pair pre and post mean and SEM summary variables
-        errorbar((x1(:,1) -  0.335),y(:,1), [2*preSD(1,1), 2*postSD(1,1)]', '.');
-        errorbar((x1(:,1) -  0.20),y(:,2), [2*preSD(1,2), 2*postSD(1,2)]', '.');
-        errorbar((x1(:,1) -  0.065),y(:,3), [2*preSD(1,3), 2*postSD(1,3)]', '.');
-        errorbar((x1(:,1) +  0.065),y(:,4), [2*preSD(1,4), 2*postSD(1,4)]', '.');
-        errorbar((x1(:,1) +  0.20),y(:,5), [2*preSD(1,5), 2*postSD(1,5)]', '.');
-        errorbar((x1(:,1) +  0.335),y(:,6), [2*preSD(1,6), 2*postSD(1,6)]', '.');
+        errorbar((x1(:,1) -  0.335),y(:,1), [2*preSEM(1,1), 2*postSEM(1,1)]', '.');
+        errorbar((x1(:,1) -  0.20),y(:,2), [2*preSEM(1,2), 2*postSEM(1,2)]', '.');
+        errorbar((x1(:,1) -  0.065),y(:,3), [2*preSEM(1,3), 2*postSEM(1,3)]', '.');
+        errorbar((x1(:,1) +  0.065),y(:,4), [2*preSEM(1,4), 2*postSEM(1,4)]', '.');
+        errorbar((x1(:,1) +  0.20),y(:,5), [2*preSEM(1,5), 2*postSEM(1,5)]', '.');
+        errorbar((x1(:,1) +  0.335),y(:,6), [2*preSEM(1,6), 2*postSEM(1,6)]', '.');
     elseif nargin == 6 % THIS IS THE CHRONIC PAS PROTOCOL
-        errorbar((x1(:,1) -  0.335),y(:,1), [2*pre1SD(1,1), 2*pre2SD(1,1), 2*post1SD(1,1), 2*post2SD(1,1), 2*post3SD(1,1)]', '.');
-        errorbar((x1(:,1) -  0.20),y(:,2), [2*pre1SD(1,2), 2*pre2SD(1,2), 2*post1SD(1,2), 2*post2SD(1,2), 2*post3SD(1,2)]', '.');
-        errorbar((x1(:,1) -  0.065),y(:,3), [2*pre1SD(1,3), 2*pre2SD(1,3), 2*post1SD(1,3), 2*post2SD(1,3), 2*post3SD(1,3)]', '.');
-        errorbar((x1(:,1) +  0.065),y(:,4), [2*pre1SD(1,4), 2*pre2SD(1,4), 2*post1SD(1,4), 2*post2SD(1,4), 2*post3SD(1,4)]', '.');
-        errorbar((x1(:,1) +  0.20),y(:,5), [2*pre1SD(1,5), 2*pre2SD(1,5), 2*post1SD(1,5), 2*post2SD(1,5), 2*post3SD(1,5)]', '.');
-        errorbar((x1(:,1) +  0.335),y(:,6), [2*pre1SD(1,6), 2*pre2SD(1,6), 2*post1SD(1,6), 2*post2SD(1,6), 2*post3SD(1,6)]', '.');
+        errorbar((x1(:,1) -  0.335),y(:,1), [2*pre1SEM(1,1), 2*pre2SEM(1,1), 2*post1SEM(1,1), 2*post2SEM(1,1), 2*post3SEM(1,1)]', '.');
+        errorbar((x1(:,1) -  0.20),y(:,2), [2*pre1SEM(1,2), 2*pre2SEM(1,2), 2*post1SEM(1,2), 2*post2SEM(1,2), 2*post3SEM(1,2)]', '.');
+        errorbar((x1(:,1) -  0.065),y(:,3), [2*pre1SEM(1,3), 2*pre2SEM(1,3), 2*post1SEM(1,3), 2*post2SEM(1,3), 2*post3SEM(1,3)]', '.');
+        errorbar((x1(:,1) +  0.065),y(:,4), [2*pre1SEM(1,4), 2*pre2SEM(1,4), 2*post1SEM(1,4), 2*post2SEM(1,4), 2*post3SEM(1,4)]', '.');
+        errorbar((x1(:,1) +  0.20),y(:,5), [2*pre1SEM(1,5), 2*pre2SEM(1,5), 2*post1SEM(1,5), 2*post2SEM(1,5), 2*post3SEM(1,5)]', '.');
+        errorbar((x1(:,1) +  0.335),y(:,6), [2*pre1SEM(1,6), 2*pre2SEM(1,6), 2*post1SEM(1,6), 2*post2SEM(1,6), 2*post3SEM(1,6)]', '.');
     end
     % write appropriate title overlay depending on what is plotted. 
     if rem_baseline_flag == 1
@@ -107,8 +107,6 @@ function [ ] = PAS_bar ( rem_baseline_flag, varargin )
     
 %     saveas(gcf, [blockname_pre blockname_post 'bar.svg']);
 
-
-    
 end
 
  
