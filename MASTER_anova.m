@@ -1,4 +1,4 @@
-function [ processed_data ] = MASTER_anova( save_path, tmp_struct )
+function [ processed_data, EMG_vect ] = MASTER_anova( tmp_struct )
 
     anova_flag = 1;
 
@@ -22,7 +22,7 @@ function [ processed_data ] = MASTER_anova( save_path, tmp_struct )
 %     % [ PASTable ] = PAS_resultstable ( ttestresults, EMG_prevalues_meanSEM, EMG_postvalues_meanSEM );
 %     
 %     % Plot EMG values on time axis for each channel
-%     EMG_plot ( mean_rect_EMGs_pre, sd_rect_EMGs_pre, mean_rect_EMGs_post, sd_rect_EMGs_post, time_axis, blockname_pre, blockname_post, EMG_vect );
+    % EMG_plot ( processed_data, EMG_vect );
 % 
 %     %     Save analysis workspace as PASanalysis.mat in the working directory
 %     %     save('PASanalysis.mat');

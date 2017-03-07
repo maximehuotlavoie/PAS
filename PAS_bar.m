@@ -6,6 +6,8 @@
 % INPUTS: EMG_prevalues_meanSEM, EMG_postvalues_meanSEM, norm
 % OUTPUTS: [Figure: A bar graph]
 
+% 16 x 6 x 5 3D array
+
 function [ ] = PAS_bar ( rem_baseline_flag, varargin )
     % Initiate figure base
     figure;
@@ -47,7 +49,7 @@ function [ ] = PAS_bar ( rem_baseline_flag, varargin )
     
     hold on;
     b = bar(y,'FaceColor','w','LineWidth',0.5);
-    set(gca,'XTickLabel', {'A', 'B'});
+    % set(gca,'XTickLabel', {'A', 'B', 'C', 'D', 'E', 'F'});
     % b{1}.FaceColor='w';
     
     if nargin == 3

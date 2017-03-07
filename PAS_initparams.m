@@ -1,5 +1,5 @@
 % FUNCTION: PAS_initparams.m
-% W Ting, Dec 2016
+% C Ethier, W Ting, 2017
 % Purpose: Allows the user to specify desired init params
 % INPUTS: NA
 % OUTPUTS: userlower (user-specified lower bound of desired analysis time);

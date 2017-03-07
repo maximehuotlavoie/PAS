@@ -20,13 +20,13 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     StS_names = fieldnames(tdt_struct.snips);
     % Error handling for multiple strobe signals
     if length(StS_names) > 1 
-        % if there are multiple names:  
+        % if there are multiple names:
         warning('not implemented for multiple strobe signals yet'); 
         % print warning that multiple signals are not implemented yet
     end
 
     % obtain snip data and store in 'STS'
-    StS = getfield(tdt_struct.snips,StS_names{1}); 
+    StS = getfield(tdt_struct.snips,StS_names{1});
     % get epoch names from the epocs section from the TDT structure
     epoc_names =  fieldnames(tdt_struct.epocs);
     % compare 'epoc_names' and 'stim' to see if the strings are identical, and store the result [1] if they are the same and [0] if they are different in the variable 'stim_field'
@@ -45,7 +45,20 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     % obtain stim onset time
     stim_epoc  = getfield(tdt_struct.epocs,epoc_names{stim_field}); 
     % assign 'stim_onset1' to the onset time of the epoch
-    stim_onset1= stim_epoc.onset(1,1); 
+    stim_onset1= stim_epoc.onset(1,1);
+    
+    snip_onsets = unique(StS.ts);
+    %check if there was an extra snip recorded at the beginning of the file
+    if stim_epoc.onset(1,1)-snip_onsets(1) > 1
+        warning('extra snip detected at file onset - removed first snip!!');
+        % there is a greater than one second difference between beginning
+        % of the first snip and first stim onset. remove first snip
+        StS.ts      = StS.ts(num_chan+1:end,:);
+        StS.data    = StS.data(num_chan+1:end,:);
+        StS.chan    = StS.chan(num_chan+1:end,:);
+        StS.sortcode= StS.sortcode(num_chan+1:end,:);
+    end
+        
     % calculate the required time bin duration by taking 
     % the inverse of the sampling frequency, and store it in the variable
     % 'time_bin'
