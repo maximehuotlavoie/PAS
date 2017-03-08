@@ -49,8 +49,13 @@ function [ ] = PAS_bar ( rem_baseline_flag, varargin )
     
     hold on;
     b = bar(y,'FaceColor','w','LineWidth',0.5);
-    % set(gca,'XTickLabel', {'A', 'B', 'C', 'D', 'E', 'F'});
     % b{1}.FaceColor='w';
+
+    % For ACUTE ANALYSIS DIFFERENT BAR COLORS
+%     b = bar(y,'FaceColor','b','LineWidth',0.5);
+%     b(1).FaceColor='b';
+%     b(2).FaceColor='r';
+    % // ACUTE ANALYSIS DIFFERENT BAR COLORS
     
     if nargin == 3
         x1 = repmat(x1,1,2);
