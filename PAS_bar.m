@@ -106,8 +106,8 @@ function [ ] = PAS_bar ( rem_baseline_flag, varargin )
     annotation('textbox',dim,'String',SEMlabel,'FitBoxToText','on');
         
     % legend('Pre-PAS','Post-PAS');
-    
-%     saveas(gcf, [blockname_pre blockname_post 'bar.svg']);
+    savefig(gcf, [varargin{1}(1).blockname 'bar.fig']);
+    saveas(gcf, [varargin{1}(1).blockname 'bar.svg']);
 
 end
 

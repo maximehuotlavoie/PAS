@@ -1,5 +1,5 @@
 % FUNCTION: TDT_import.m
-% C Ethier, W Ting, Dec 2016
+% C Ethier, W Ting, 2017
 % Purpose: To import TDT Data into a matlab structure for further
 % processing
 % INPUTS: varargin{load_flag} (whether or not to load imported data in base workspace

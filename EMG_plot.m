@@ -23,17 +23,13 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, num_sess ) % processed data
         % ylim([-ymax/10 ymax]);
         legend('pre1','pre2','post1','post2','post3');
         
-        % label the x axis to be time in seconds, and the y label to be
-        % mean rectified EMG signal in V
-        % Labels appropriately based on whether normed or non normed data is
-        % used
+
         xlabel('time (s)'); ylabel('Mean Rectified EMG Signal (V)');     
         title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
         
-        % Save Figures to File
-        % set(gcf,'renderer','painters');
-        % saveas(gcf, [blockname_pre blockname_post '_ch' num2str(ch) '_EMG.svg']);
-        % savefig(gcf, [blockname_pre blockname_post '_ch' num2str(ch) '_EMG.fig']);
+        set(gcf,'renderer','painters');
+        saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_EMG.svg']);
+        savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_EMG.fig']);
 
     end
 
