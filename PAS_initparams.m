@@ -14,7 +14,7 @@ function [ userlower, userupper, EMG_vect, norm, analyzestimdur, analyzeallflag,
     dlg_title = 'Input desired analysis parameters';
     num_lines = 1;
     % Default params
-    defaultans = {'0.1','0.8','1:6','Y','Y','N','5'};
+    defaultans = {'0.1','0.8','1:4','Y','Y','N','5'};
     params = inputdlg(prompt,dlg_title,num_lines,defaultans);
     userlower = str2double(params{1});
     userupper = str2double(params{2});
