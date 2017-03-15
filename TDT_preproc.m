@@ -14,7 +14,7 @@
 % time_axis); num_chan (number of channels specified by TDT data);
 % time_axis (horizontal vector with times concordant with the data points
 % collected in the TDT data).
-function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur, EMG_vect)
+function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur, EMG_vect,muscle_of_interest)
 
     % extract basic info from data structure
     StS_names = fieldnames(tdt_struct.snips);
@@ -94,9 +94,10 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
         baseline_mean = mean(all_evoked_EMGs(:,1:stim_onset),2);
     
-    
-        [valid_stims] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, ch, baseline_mean,valid_stims);            
-
+        if ch == muscle_of_interest
+            [valid_stims] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, ch, baseline_mean,valid_stims);            
+        end
+            
          if rem_baseline_flag
             all_evoked_EMGs = rem_baseline(stim_onset,all_evoked_EMGs);
          end
