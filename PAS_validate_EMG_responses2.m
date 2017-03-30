@@ -1,4 +1,4 @@
-function valid_stims = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims)
+function [valid_stims, trial_validation_summary] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims, muscle_of_interest)
 %Plots individual trials of EMG responses and presents a space for user to enter a vector, indicating which trial to take out
 
 figure;
@@ -12,6 +12,11 @@ figure;
 breakflag = 0;
 med1sd= median(baseline_mean)+1*std(baseline_mean);
 trialvect = baseline_mean < med1sd;
+
+% autoflagvector = trialvect;
+% manualvector = nan(size(trialvect));
+% notevector = cell(size(trialvect));
+
 trialvect = and(valid_stims,trialvect);
 
 %For trials from 1 to 16,
@@ -19,13 +24,11 @@ for tr = 1:size(all_evoked_EMGs,1)
     
     if trialvect(tr)
         plot(time_axis,all_evoked_EMGs(tr,:),'b');
-    else
-        
+    else    
         plot(time_axis,all_evoked_EMGs(tr,:),'r');
     end
     
     title(['stim number: ' num2str(tr)]);
-
     
     BLSD = (baseline_mean(tr)-median(baseline_mean))/std(baseline_mean);
     ChannelLabel = ['Ch ' sprintf('%d, %.2f SD',ch,BLSD)];
@@ -43,9 +46,29 @@ for tr = 1:size(all_evoked_EMGs,1)
     switch choice
         case 'KEEP'
             sprintf('Trial %d KEPT', tr)
+%             manualvector(tr) = true;
+%             if autoflagvector(tr) ~= manualvector(tr)
+%                 warning('DEVIANT DETECTED')
+%                 x = inputdlg('Indicate why you deviated from autoflag','Trial Notes', [1 50]);
+%                 if isempty(x) == 1
+%                     notevector(tr,ch) = cellstr('NA'); 
+%                 elseif isempty(x) == 0
+%                     notevector(tr,ch) = x;
+%                 end
+%             end
             trialvect(tr) = true;
         case 'DISCARD'
             sprintf('Trial %d DISCARDED', tr)
+%             manualvector(tr) = false;
+%             if autoflagvector(tr,ch) ~= manualvector(tr)
+%                 warning('DEVIANT DETECTED')
+%                 x = inputdlg('Indicate why you deviated from autoflag','Trial Notes', [1 50]);
+%                 if isempty(x) == 1
+%                     notevector(tr,ch) = cellstr('NA');
+%                 elseif isempty(x) == 0
+%                     notevector(tr,ch) = x;
+%                 end
+%             end
             trialvect(tr) = false;
         case 'AUTO/Break'
             breakflag = 1;
@@ -65,6 +88,14 @@ for tr = 1:size(all_evoked_EMGs,1)
     
 end
 
-valid_stims = and(valid_stims,trialvect);
+if ch == muscle_of_interest
+    warning('APPLIED Automatic and Manual Trial Validation');
+    valid_stims = and(valid_stims,trialvect);
+end
+
+% trial_validation_summary = struct('autoflagvect',   autoflagvector, ...
+%     'manualvect', manualvector, ...
+%     'notevect', {notevector});
+
 % all_evoked_EMGs = all_evoked_EMGs(trialvect,:);
 end

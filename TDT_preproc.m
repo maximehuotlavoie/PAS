@@ -14,7 +14,7 @@
 % time_axis); num_chan (number of channels specified by TDT data);
 % time_axis (horizontal vector with times concordant with the data points
 % collected in the TDT data).
-function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur, EMG_vect,muscle_of_interest)
+function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur, EMG_vect, muscle_of_interest)
 
     % extract basic info from data structure
     StS_names = fieldnames(tdt_struct.snips);
@@ -52,9 +52,9 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     end
     
     % initialize variables and counters
-%     chan_list     = unique(StS.chan); 
+    % chan_list     = unique(StS.chan); 
     num_chan      = length(EMG_vect);
-    [num_rows,num_data_pts]  = size(StS.data);  
+    [num_rows, num_data_pts]  = size(StS.data);  
     num_stim       = num_rows/ num_orig_chan;
     mean_rect_EMGs = nan(num_data_pts,num_chan);
     sd_rect_EMGs   = nan(num_data_pts,num_chan);
@@ -93,14 +93,14 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         % calculate the mean rectified EMG signal for all channels
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
         baseline_mean = mean(all_evoked_EMGs(:,1:stim_onset),2);
-    
+        
         if ch == muscle_of_interest
-            [valid_stims] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, ch, baseline_mean,valid_stims);            
+            [valid_stims] = PAS_validate_EMG_responses2 (all_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims, muscle_of_interest);
         end
-            
-         if rem_baseline_flag
+        
+        if rem_baseline_flag
             all_evoked_EMGs = rem_baseline(stim_onset,all_evoked_EMGs);
-         end
+        end
 
         mean_rect_EMGs(:,ch) = mean(all_evoked_EMGs,1)';
         sd_rect_EMGs(:,ch)   = std(all_evoked_EMGs,0,1)';
@@ -108,7 +108,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     end
     
     evoked_EMGs = evoked_EMGs(valid_stims,:);
-%     processed_data = struct('mean_rect_EMGs',   mean_rect_EMGs, ...
+%   processed_data = struct('mean_rect_EMGs',   mean_rect_EMGs, ...
 %                             'sd_rect_EMGs',     sd_rect_EMGs,...
 %                             'time_axis',        time_axis,...
 %                             'evoked_EMGs',      evoked_EMGs,...
@@ -123,5 +123,8 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
                             'blockname',        blockname,...
                             'num_chan',         num_chan);
 
+        %Look at average EMG plots. If want to plot everything then sub 'pre1'
+        %with 'aggregated_data'
+%        EMG_plot ( processed_data, EMG_vect)
 end
 
