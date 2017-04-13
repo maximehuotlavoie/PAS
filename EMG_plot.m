@@ -6,7 +6,7 @@
 % lowerbound, upperbound
 % OUTPUTS: [Figures: EMG plots]
 
-function [ ] = EMG_plot ( aggregated_data, EMG_vect, yrange ) 
+function [ ] = EMG_plot ( aggregated_data, EMG_vect, yrange, UNRECT_flag ) 
 
     num_chan = length(EMG_vect);
     num_sess = length(aggregated_data);
@@ -15,31 +15,37 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, yrange )
     
     for ch_idx=1:num_chan
         
-    ch = EMG_vect(ch_idx); 
+    ch = EMG_vect(ch_idx);
         
         for sess = 1:num_sess
             
             figure;
             
-            plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_rect_EMGs(:,ch));
-            ylim(yrange);
-            legend(aggregated_data(sess).blockname)
+            if UNRECT_flag == 1
+                plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_UNRECT_EMGs(:,ch));
+                xlabel('time (s)'); ylabel('Mean UNRECTIFIED EMG Signal (V)');
+                ylim(yrange);
+                legend(aggregated_data(sess).blockname);
+                title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
+                
+                saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.svg']);
+                savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.fig']);
 
-            xlabel('time (s)'); ylabel('Mean Rectified EMG Signal (V)');     
-            title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
+            else
+                plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_rect_EMGs(:,ch));
+                xlabel('time (s)'); ylabel('Mean Rectified EMG Signal (V)');
+                ylim(yrange);
+                legend(aggregated_data(sess).blockname);
+                title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
+                
+                saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.svg']);
+                savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.fig']);
+            end
+                
+
             
-            saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.svg']);
-            savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.fig']);
-            % once uncommenting the line below rmb to add yrange as an input to this function 
-            
-  
         
         end
-        
-        % ylim([-ymax/10 ymax]);
-        % legend('pre1','pre2','post1','post2','post3');
-
-
 
     end
 

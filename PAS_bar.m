@@ -13,7 +13,7 @@ function PAS_bar ( rem_baseline_flag, aggregated_data )
     figure;
     num_sess = length(aggregated_data);
     num_emgs = aggregated_data(1).num_chan;
-    
+
     mean_evoked_EMG = nan(num_sess,num_emgs);
     sem_evoked_EMG = nan(num_sess,num_emgs);
     
@@ -30,8 +30,10 @@ function PAS_bar ( rem_baseline_flag, aggregated_data )
     
     if rem_baseline_flag == 1
         xlabel('Within Day Session'); ylabel('Mean (BL removed) Rectified EMG Response, 2SEM)(V)');
+        xtickangle(40)
     elseif rem_baseline_flag == 0
         xlabel('Within Day Session'); ylabel('Mean Rectified EMG Response, 2SEM (V)');
+        xtickangle(40)
     end
      
     

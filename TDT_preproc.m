@@ -54,13 +54,12 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     % initialize variables and counters
     % chan_list     = unique(StS.chan); 
     num_chan      = length(EMG_vect);
-    [num_rows, num_data_pts]  = size(StS.data);  
+    [num_rows,num_data_pts]  = size(StS.data);  
     num_stim       = num_rows/ num_orig_chan;
     mean_rect_EMGs = nan(num_data_pts,num_chan);
     sd_rect_EMGs   = nan(num_data_pts,num_chan);
     evoked_EMGs    = nan(num_stim,num_chan);
     
-        
     % calculate the required time bin duration by taking 
     % the inverse of the sampling frequency, and store it in the variable
     % 'time_bin'
@@ -94,37 +93,47 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
         baseline_mean = mean(all_evoked_EMGs(:,1:stim_onset),2);
         
+        % calculate the mean UN RECTIFIED EMG signal for all channels
+        all_UNRECT_evoked_EMGs = StS.data(ch_idx,:);
+        baseline_UNRECT_mean = mean(all_UNRECT_evoked_EMGs(:,1:stim_onset),2);
+        
         if ch == muscle_of_interest
-            [valid_stims] = PAS_validate_EMG_responses2 (all_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims, muscle_of_interest);
+            [valid_stims] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims, 1);
+            [valid_stims] = PAS_validate_EMG_responses2(all_UNRECT_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims, 1);
         end
         
         if rem_baseline_flag
             all_evoked_EMGs = rem_baseline(stim_onset,all_evoked_EMGs);
+            all_UNRECT_evoked_EMGs = rem_baseline(stim_onset,all_UNRECT_evoked_EMGs); 
         end
-
+        
+        % RECTIFIED EMG signal calculations for all channels
         mean_rect_EMGs(:,ch) = mean(all_evoked_EMGs,1)';
         sd_rect_EMGs(:,ch)   = std(all_evoked_EMGs,0,1)';
         evoked_EMGs(:,ch) = mean(all_evoked_EMGs(:,analyzetimeframe),2);
+        
+        % UNRECTIFIED EMG signal calculations for all channels
+        mean_UNRECT_EMGs(:,ch) = mean(all_UNRECT_evoked_EMGs,1)';
+        sd_UNRECT_EMGs(:,ch)  = std(all_UNRECT_evoked_EMGs,0,1)';
+        evoked_UNRECT_EMGs(:,ch) = mean(all_UNRECT_evoked_EMGs(:,analyzetimeframe),2);
+        
     end
     
     evoked_EMGs = evoked_EMGs(valid_stims,:);
-%   processed_data = struct('mean_rect_EMGs',   mean_rect_EMGs, ...
-%                             'sd_rect_EMGs',     sd_rect_EMGs,...
-%                             'time_axis',        time_axis,...
-%                             'evoked_EMGs',      evoked_EMGs,...
-%                             'blockname',        blockname,...
-%                             'num_chan',         num_chan,...
-%                             'breakflag',        breakflag);
+    evoked_UNRECT_EMGs = evoked_UNRECT_EMGs(valid_stims,:);
 
-       processed_data = struct('mean_rect_EMGs',   mean_rect_EMGs, ...
+    processed_data = struct('evoked_EMGs',      evoked_EMGs,...
+                            'mean_rect_EMGs',   mean_rect_EMGs, ...
                             'sd_rect_EMGs',     sd_rect_EMGs,...
+                            'baseline_mean',    baseline_mean,...
+                            'evoked_UNRECT_EMGs',  evoked_UNRECT_EMGs, ...
+                            'mean_UNRECT_EMGs', mean_UNRECT_EMGs,...
+                            'sd_UNRECT_EMGs', sd_UNRECT_EMGs,...
+                            'baseline_UNRECT_mean', baseline_UNRECT_mean, ...
                             'time_axis',        time_axis,...
-                            'evoked_EMGs',      evoked_EMGs,...
                             'blockname',        blockname,...
                             'num_chan',         num_chan);
+                        
 
-        %Look at average EMG plots. If want to plot everything then sub 'pre1'
-        %with 'aggregated_data'
-%        EMG_plot ( processed_data, EMG_vect)
 end
 
