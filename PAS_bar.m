@@ -8,7 +8,7 @@
 
 % 16 x 6 x 5 3D array
 
-function PAS_bar ( rem_baseline_flag, aggregated_data )
+function PAS_bar ( rem_baseline_flag, EMG_vect, aggregated_data )
     % Initiate figure base
     figure;
     num_sess = length(aggregated_data);
@@ -26,7 +26,7 @@ function PAS_bar ( rem_baseline_flag, aggregated_data )
      set(gca,'XTickLabel',{aggregated_data.blockname})
      
     % write appropriate title overlay depending on what is plotted.
-    title(strrep(sprintf('Effect of PAS on EMG Response'),'_','\_'));
+    title(strrep(sprintf('blah blah blah'),'_','\_'));
     
     if rem_baseline_flag == 1
         xlabel('Within Day Session'); ylabel('Mean (BL removed) Rectified EMG Response, 2SEM)(V)');
@@ -132,8 +132,9 @@ function PAS_bar ( rem_baseline_flag, aggregated_data )
 %     annotation('textbox',dim,'String',SEMlabel,'FitBoxToText','on');
 %         
     % legend('Pre-PAS','Post-PAS');
-    savefig(gcf, [aggregated_data(1).blockname 'bar.fig']);
-    saveas(gcf, [aggregated_data(1).blockname 'bar.svg']);
+    
+    %savefig(gcf, [aggregated_data(1).blockname 'bar.fig']);
+    %saveas(gcf, [aggregated_data(1).blockname 'bar.svg']);
 
 end
 

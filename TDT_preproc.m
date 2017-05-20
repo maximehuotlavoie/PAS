@@ -14,6 +14,7 @@
 % time_axis); num_chan (number of channels specified by TDT data);
 % time_axis (horizontal vector with times concordant with the data points
 % collected in the TDT data).
+
 function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur, EMG_vect, muscle_of_interest)
 
     % extract basic info from data structure
@@ -39,6 +40,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     stim_onset1= stim_epoc.onset(1,1);
     
     snip_onsets = unique(StS.ts);
+    
     num_orig_chan = length(unique(StS.chan));
     %check if there was an extra snip recorded at the beginning of the file
     if stim_epoc.onset(1,1)-snip_onsets(1) > 1
@@ -55,7 +57,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     % chan_list     = unique(StS.chan); 
     num_chan      = length(EMG_vect);
     [num_rows,num_data_pts]  = size(StS.data);  
-    num_stim       = num_rows/ num_orig_chan;
+    num_stim       = num_rows/num_orig_chan;
     mean_rect_EMGs = nan(num_data_pts,num_chan);
     sd_rect_EMGs   = nan(num_data_pts,num_chan);
     evoked_EMGs    = nan(num_stim,num_chan);
@@ -65,7 +67,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     % 'time_bin'
     time_bin  = 1/tdt_struct.streams.EMGs.fs; 
     % calculate the pre-stim time
-    pre_stim_t= StS.ts(1,1)-stim_onset1;
+    pre_stim_t = StS.ts(1,1)-stim_onset1;
     % reframe data collected into time since stim
     time_axis = pre_stim_t:time_bin:(pre_stim_t+(num_data_pts*time_bin)-time_bin);
     
@@ -83,7 +85,6 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         analyzetimeframe = lowerbound:upperbound;
     end
     
-    
     %% look at data and extract EMG responses   
     valid_stims = true(num_stim,1);
     for ch = 1:num_chan      
@@ -92,6 +93,9 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         % calculate the mean rectified EMG signal for all channels
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
         baseline_mean = mean(all_evoked_EMGs(:,1:stim_onset),2);
+       
+        %resp_onset_index(1,ch) = find(all_evoked_EMGs>=(baseline_mean + BLSD),1,'first');
+        %resp_onset_time(2,ch) = time_axis(resp_onset_index); 
         
         % calculate the mean UN RECTIFIED EMG signal for all channels
         all_UNRECT_evoked_EMGs = StS.data(ch_idx,:);

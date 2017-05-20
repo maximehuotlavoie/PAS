@@ -39,7 +39,7 @@ for tr = 1:size(all_evoked_EMGs,1)
     % Construct a questdlg with three options
     choice = questdlg('Would you like to keep this trial?', ...
         'Trial Validation', ...
-        'KEEP','DISCARD','AUTO/Break','AUTO/Break');
+        'KEEP','DISCARD','AUTO/Break','KEEP');
         
     % Handle response
     %'Position',[.5 .2 .2 .15]);

@@ -43,7 +43,7 @@ function [ save_path, num_data_files, tdt_struct ] = TDT_import(varargin)
         
         tdt_struct = TDT2mat(fullfile(folderpath,file_name));
         
-        file_name = ['m' file_name]
+        file_name = ['m' file_name];
         eval([file_name '=tdt_struct']);
         
         %TODO: make saved structure names to match folder name and file
