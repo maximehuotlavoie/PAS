@@ -6,7 +6,7 @@
 % lowerbound, upperbound
 % OUTPUTS: [Figures: EMG plots]
 
-function [ ] = EMG_plot ( aggregated_data, EMG_vect, yrange, UNRECT_flag, ACUTE_flag, ACUTE_preindex, ACUTE_postindex ) 
+function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNRECT_flag, ACUTE_flag, ACUTE_preindex, ACUTE_postindex ) 
 
     num_chan = length(EMG_vect);
     num_sess = length(aggregated_data);
@@ -24,7 +24,12 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, yrange, UNRECT_flag, ACUTE_
             plot(aggregated_data(1).time_axis, aggregated_data(ACUTE_postindex).mean_rect_EMGs(:,ch),'r');
             hold off;
             
-            xlabel('time (s)'); ylabel('Mean Rectified EMG Signal (V)');
+            xlabel('Time (s)'); ylabel('Mean Rectified EMG Signal (V)');
+            
+            if xlimit == 1
+                xlim(xrange);
+            end
+            
             ylim(yrange);
             legend(aggregated_data(ACUTE_preindex).blockname, aggregated_data(ACUTE_postindex).blockname);
             title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
@@ -43,7 +48,7 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, yrange, UNRECT_flag, ACUTE_
             if UNRECT_flag == 1
                 
                 plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_UNRECT_EMGs(:,ch));
-                xlabel('time (s)'); ylabel('Mean UNRECTIFIED EMG Signal (V)');
+                xlabel('Time (s)'); ylabel('Mean UNRECTIFIED EMG Signal (V)');
                 ylim(yrange);
                 legend(aggregated_data(sess).blockname);
                 title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
@@ -55,7 +60,7 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, yrange, UNRECT_flag, ACUTE_
                
                 
                 % plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_rect_EMGs(:,ch));
-                xlabel('time (s)'); ylabel('Mean Rectified EMG Signal (V)');
+                xlabel('Time (s)'); ylabel('Mean Rectified EMG Signal (V)');
                 ylim(yrange);
                 legend(aggregated_data(sess).blockname);
                 title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));

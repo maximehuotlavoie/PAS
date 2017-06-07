@@ -24,7 +24,7 @@ EMG_plot ( superaggregate, 3, [-0.1e-3 1.4135e-4], 0); % For Ch3 Threshold
 
 EMG_plot ( agg, 3, [-0.1e-3 0.0809], 0); % for unilaterial Ch3 Threshold
 
-PAS_bar ( rem_baseline_flag, agg );
+PAS_bar ( rem_baseline_flag, EMG_vect, agg );
 
 PAS_bar ( rem_baseline_flag, Laggprepost090 ); 
 PAS_bar ( rem_baseline_flag, Raggprepost ); 

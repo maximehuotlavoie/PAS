@@ -14,22 +14,22 @@ function PAS_bar ( rem_baseline_flag, EMG_vect, aggregated_data )
     num_sess = length(aggregated_data);
     num_emgs = aggregated_data(1).num_chan;
 
-    mean_evoked_EMG = nan(num_sess,num_emgs);
-    sem_evoked_EMG = nan(num_sess,num_emgs);
+    %mean_evoked_EMG = nan(num_sess,num_emgs);
+    %sem_evoked_EMG = nan(num_sess,num_emgs);
     
     for s = 1:num_sess
-        mean_evoked_EMG(s,:) = mean(aggregated_data(s).evoked_EMGs);
-        sem_evoked_EMG(s,:)  = 2*std(aggregated_data(s).evoked_EMGs)/sqrt(size(aggregated_data(s).evoked_EMGs,1));
+        mean_evoked_EMG(s,:) = mean(aggregated_data(s).evoked_EMGs(:,EMG_vect));
+        sem_evoked_EMG(s,:)  = 2*std(aggregated_data(s).evoked_EMGs(:,EMG_vect))/sqrt(size(aggregated_data(s).evoked_EMGs(:,EMG_vect),1));
     end
 
      barwitherr(sem_evoked_EMG,mean_evoked_EMG);
      set(gca,'XTickLabel',{aggregated_data.blockname})
-     
+
     % write appropriate title overlay depending on what is plotted.
-    title(strrep(sprintf('blah blah blah'),'_','\_'));
+    title(strrep(sprintf(''),'_','\_'));
     
     if rem_baseline_flag == 1
-        xlabel('Within Day Session'); ylabel('Mean (BL removed) Rectified EMG Response, 2SEM)(V)');
+        xlabel('Session'); ylabel('Mean (BL removed) Rectified EMG Response, 2SEM) (V)');
         xtickangle(40)
     elseif rem_baseline_flag == 0
         xlabel('Within Day Session'); ylabel('Mean Rectified EMG Response, 2SEM (V)');
@@ -131,7 +131,7 @@ function PAS_bar ( rem_baseline_flag, EMG_vect, aggregated_data )
 %     dim = [.62 .5 .3 .3];
 %     annotation('textbox',dim,'String',SEMlabel,'FitBoxToText','on');
 %         
-    % legend('Pre-PAS','Post-PAS');
+     legend('Right Extensor', 'Left Extensor');
     
     %savefig(gcf, [aggregated_data(1).blockname 'bar.fig']);
     %saveas(gcf, [aggregated_data(1).blockname 'bar.svg']);
