@@ -1,7 +1,7 @@
 agg = [pre1sp, pre2sp, post1sp, post2sp, post3sp];
 
-Lagg = [BLCh4, Post1Ch4, Post2Ch4, Post3Ch4, Post4Ch4, Post5Ch4, Post6Ch4, Post7Ch4];
-Ragg = [BLCh1, Post1Ch1, Post2Ch1, Post3Ch1, Post4Ch1, Post5Ch1, Post6Ch1, Post7Ch1];
+Lagg = [BL_L1, inter_L2, inter_L3, inter_L4, inter_L5, inter_L6, inter_L7, inter_L8, PostPAS_L9, ProbeL10, ProbeL11, ProbeL12, ProbeL13, ProbeL14];
+Ragg = [BL_R1, inter_R2, inter_R3, inter_R4, inter_R5, inter_R6, inter_R7, inter_R8, PostPAS_R9, ProbeR10, ProbeR11, ProbeR12, ProbeR13, ProbeR14];
 
 Laggprepost110 = [BL_L110, PostPAS_L110];
 Raggprepost110 = [BL_R110, PostPAS_R110];

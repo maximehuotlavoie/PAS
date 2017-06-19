@@ -6,7 +6,7 @@
 % lowerbound, upperbound
 % OUTPUTS: [Figures: EMG plots]
 
-function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNRECT_flag, ACUTE_flag, ACUTE_preindex, ACUTE_postindex ) 
+function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNRECT_flag, ACUTE_flag, ACUTE_preindex, ACUTE_postindex, save ) 
 
     num_chan = length(EMG_vect);
     num_sess = length(aggregated_data);
@@ -19,9 +19,9 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNR
         
         if ACUTE_flag == 1
         
-            plot(aggregated_data(1).time_axis, aggregated_data(ACUTE_preindex).mean_rect_EMGs(:,ch),'b');
-            hold on; 
-            plot(aggregated_data(1).time_axis, aggregated_data(ACUTE_postindex).mean_rect_EMGs(:,ch),'r');
+            plot(aggregated_data(1).time_axis, aggregated_data(ACUTE_preindex).mean_collapsed_EMGs(:,ch),'b');
+            hold on;
+            plot(aggregated_data(1).time_axis, aggregated_data(ACUTE_postindex).mean_collapsed_EMGs(:,ch),'r');
             hold off;
             
             xlabel('Time (s)'); ylabel('Mean Rectified EMG Signal (V)');
@@ -34,8 +34,10 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNR
             legend(aggregated_data(ACUTE_preindex).blockname, aggregated_data(ACUTE_postindex).blockname);
             title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
             
-            %saveas(gcf, ['Ch' num2str(ch) '_' aggregated_data(ACUTE_preindex).blockname '_' aggregated_data(ACUTE_postindex).blockname '_EMG.svg']);
-            %savefig(gcf, ['Ch' num2str(ch) '_' aggregated_data(ACUTE_preindex).blockname '_' aggregated_data(ACUTE_postindex).blockname '_EMG.fig']);
+            if save == 1
+                saveas(gcf, ['Ch' num2str(ch) '_' aggregated_data(ACUTE_preindex).blockname '_' aggregated_data(ACUTE_postindex).blockname '_EMG.svg']);
+                savefig(gcf, ['Ch' num2str(ch) '_' aggregated_data(ACUTE_preindex).blockname '_' aggregated_data(ACUTE_postindex).blockname '_EMG.fig']);
+            end 
             
             break;
         
@@ -47,27 +49,30 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNR
             
             if UNRECT_flag == 1
                 
-                plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_UNRECT_EMGs(:,ch));
+                plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_collapsed_UNRECT_EMGs(:,ch));
                 xlabel('Time (s)'); ylabel('Mean UNRECTIFIED EMG Signal (V)');
                 ylim(yrange);
                 legend(aggregated_data(sess).blockname);
                 title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
                 
-%                 saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.svg']);
-%                 savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.fig']);
-%                 
-            else
-               
+                if save == 1    
+                    saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.svg']);
+                    savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.fig']);
+                end 
                 
-                % plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_rect_EMGs(:,ch));
+            else
+                
+                plot(aggregated_data(sess).time_axis, aggregated_data(sess).mean_collapsed_EMGs(:,ch));
                 xlabel('Time (s)'); ylabel('Mean Rectified EMG Signal (V)');
                 ylim(yrange);
                 legend(aggregated_data(sess).blockname);
                 title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
-%                 
-%                 saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.svg']);
-%                 savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.fig']);
-
+            
+                if save == 1
+                    saveas(gcf, [aggregated_data(sess).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.svg']);
+                    savefig(gcf, [aggregated_data(sess).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.fig']);
+                end
+            
             end
                 
         end

@@ -1,3 +1,5 @@
+%% Run this script every time a session completes
+
 % Init Import and Config
 [ save_path, num_data_files, tdt_struct ] = TDT_import();
 load initparams.mat
@@ -16,4 +18,13 @@ end
 clear tdt_struct;
 
 a.b = struct('c',{},'d',{})
+
 % Prepare aggregate data structures for plotting
+
+% Generate overall plot layout for the whole experiment with figure
+% subplots
+
+% Generate all EMG plots and insert into overall plot layout
+
+% Generate overall bar plot and insert into overall plot layout
+

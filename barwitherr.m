@@ -94,6 +94,8 @@ end
 
 [nRows nCols] = size(values);
 handles.bar = bar(varargin{:}); % standard implementation of bar fn
+
+ax.XMinorTick = 'on'
 hold on
 
 if nRows > 1

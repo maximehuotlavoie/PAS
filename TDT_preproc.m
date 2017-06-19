@@ -44,7 +44,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     num_orig_chan = length(unique(StS.chan));
     %check if there was an extra snip recorded at the beginning of the file
     if stim_epoc.onset(1,1)-snip_onsets(1) > 1
-        warning('extra snip detected at file onset - removed first snip!!');
+        warning('extra snip detected at file onset - removed first snip!');
         % there is a greater than one second difference between beginning
         % of the first snip and first stim onset. remove first snip
         StS.ts      = StS.ts(num_orig_chan+1:end,:);
@@ -58,10 +58,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
     num_chan      = length(EMG_vect);
     [num_rows,num_data_pts]  = size(StS.data);  
     num_stim       = num_rows/num_orig_chan;
-    mean_rect_EMGs = nan(num_data_pts,num_chan);
-    sd_rect_EMGs   = nan(num_data_pts,num_chan);
-    evoked_EMGs    = nan(num_stim,num_chan);
-    
+   
     % calculate the required time bin duration by taking 
     % the inverse of the sampling frequency, and store it in the variable
     % 'time_bin'
@@ -85,60 +82,98 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         analyzetimeframe = lowerbound:upperbound;
     end
     
-    %% look at data and extract EMG responses   
+    % establish initial array of logicals for 'valid_stims' and 'valid_UNRECT_stims'  
     valid_stims = true(num_stim,1);
-    for ch = 1:num_chan      
+    valid_UNRECT_stims = true(num_stim,1);
+    
+    for ch = 1:num_chan  
+        
         % channel ID will be assigned a value of 1 if 'ch' == the channel number in this loop iteration 
         ch_idx = StS.chan(:,1)==ch;
         % calculate the mean rectified EMG signal for all channels
         all_evoked_EMGs = abs(StS.data(ch_idx,:));
         baseline_mean = mean(all_evoked_EMGs(:,1:stim_onset),2);
-       
-        %resp_onset_index(1,ch) = find(all_evoked_EMGs>=(baseline_mean + BLSD),1,'first');
-        %resp_onset_time(2,ch) = time_axis(resp_onset_index); 
         
         % calculate the mean UN RECTIFIED EMG signal for all channels
         all_UNRECT_evoked_EMGs = StS.data(ch_idx,:);
         baseline_UNRECT_mean = mean(all_UNRECT_evoked_EMGs(:,1:stim_onset),2);
         
         if ch == muscle_of_interest
-            [valid_stims] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims, 1);
-            [valid_stims] = PAS_validate_EMG_responses2(all_UNRECT_evoked_EMGs, time_axis, ch, baseline_mean, valid_stims, 1);
+            
+            [valid_stims] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, baseline_mean, valid_stims, muscle_of_interest, tdt_struct); 
+            
+            % Construct a questdlg with three options
+            choice = questdlg('Keep the same trial selections for UNRECTIFIED EMGs?', ...
+                'Keep or Restart', ...
+                'KEEP THE SAME','START FRESH','KEEP THE SAME');
+            
+            switch choice
+                case 'KEEP THE SAME'
+                    valid_UNRECT_stims = valid_stims;
+                    sprintf('Trial validation applied to rectified EMGs now applied to unrectified data!')
+                case 'START FRESH'
+                    sprintf('Now starting independent trial validation for unrectified EMGs...')
+                    [valid_UNRECT_stims] = PAS_validate_EMG_responses2(all_UNRECT_evoked_EMGs, time_axis, baseline_mean, valid_stims, muscle_of_interest, tdt_struct); 
+                    sprintf('Independent Trial Validation has been applied to unrectified data!')
+            end
+            
         end
         
+        % REMOVE BASELINE on ALL TRIALS PRIOR TO FILTERING BASED ON
+        % VALIDATION
         if rem_baseline_flag
             all_evoked_EMGs = rem_baseline(stim_onset,all_evoked_EMGs);
             all_UNRECT_evoked_EMGs = rem_baseline(stim_onset,all_UNRECT_evoked_EMGs); 
         end
         
-        % RECTIFIED EMG signal calculations for all channels
-        mean_rect_EMGs(:,ch) = mean(all_evoked_EMGs,1)';
-        sd_rect_EMGs(:,ch)   = std(all_evoked_EMGs,0,1)';
-        evoked_EMGs(:,ch) = mean(all_evoked_EMGs(:,analyzetimeframe),2);
-        
-        % UNRECTIFIED EMG signal calculations for all channels
-        mean_UNRECT_EMGs(:,ch) = mean(all_UNRECT_evoked_EMGs,1)';
-        sd_UNRECT_EMGs(:,ch)  = std(all_UNRECT_evoked_EMGs,0,1)';
-        evoked_UNRECT_EMGs(:,ch) = mean(all_UNRECT_evoked_EMGs(:,analyzetimeframe),2);
-        
+        % RECORD of UNFILTERED TRIALS DATA
+        uncollapsed_unfiltered_rect_EMGs = all_evoked_EMGs;
+        uncollapsed_unfiltered_UNRECT_EMGs = all_UNRECT_evoked_EMGs;
+
+        % FILTER TRIALS BASED ON VALIDATION
+        uncollapsed_filtered_rect_EMGs   = all_evoked_EMGs(valid_stims,:);
+        uncollapsed_filtered_UNRECT_EMGs = all_UNRECT_evoked_EMGs(valid_UNRECT_stims,:);
+
+        % COLLAPSE ACROSS TRIALS BY CALCULATING SDs, used to plot error
+        % bars in bar graphs
+        sd_collapsed_rect_EMGs(:,ch)     = std(uncollapsed_filtered_rect_EMGs,0,1)';
+        sd_collapsed_UNRECT_EMGs(:,ch)   = std(uncollapsed_filtered_UNRECT_EMGs,0,1)';
+
+        % COLLAPSE ACROSS TIME BY CALCULATING THE MEANS across
+        % analyzetimeframe, used to do stats and plot bar graphs
+        evoked_collapsed_EMGs(valid_stims,ch)        = mean(uncollapsed_filtered_rect_EMGs(:,analyzetimeframe),2);
+        evoked_collapsed_UNRECT_EMGs(valid_stims,ch) = mean(uncollapsed_filtered_UNRECT_EMGs(:,analyzetimeframe),2);
+
+        % COLLAPSE ACROSS TRIALS BY CALCULATING THE MEANS across trials,
+        % used to plot EMG traces
+        mean_collapsed_EMGs(:,ch)        = mean(uncollapsed_filtered_rect_EMGs,1);
+        mean_collapsed_UNRECT_EMGs(:,ch) = mean(uncollapsed_filtered_UNRECT_EMGs,1);
+
+
     end
     
-    evoked_EMGs = evoked_EMGs(valid_stims,:);
-    evoked_UNRECT_EMGs = evoked_UNRECT_EMGs(valid_stims,:);
-
-    processed_data = struct('evoked_EMGs',      evoked_EMGs,...
-                            'mean_rect_EMGs',   mean_rect_EMGs, ...
-                            'sd_rect_EMGs',     sd_rect_EMGs,...
-                            'baseline_mean',    baseline_mean,...
-                            'evoked_UNRECT_EMGs',  evoked_UNRECT_EMGs, ...
-                            'mean_UNRECT_EMGs', mean_UNRECT_EMGs,...
-                            'sd_UNRECT_EMGs', sd_UNRECT_EMGs,...
-                            'baseline_UNRECT_mean', baseline_UNRECT_mean, ...
-                            'time_axis',        time_axis,...
-                            'blockname',        blockname,...
-                            'num_chan',         num_chan,...
-                            'analyzetimeframe', analyzetimeframe);
-                        
+    evoked_collapsed_EMGs = evoked_collapsed_EMGs(valid_stims,:);
+    evoked_collapsed_UNRECT_EMGs = evoked_collapsed_UNRECT_EMGs(valid_UNRECT_stims,:);
+ 
+        
+    % OUTPUT FINAL SUMMARY DATA STRUCTURE
+    
+    processed_data = struct( 'uncollapsed_unfiltered_rect_EMGs', uncollapsed_unfiltered_rect_EMGs,...
+                             'uncollapsed_unfiltered_UNRECT_EMGs', uncollapsed_unfiltered_UNRECT_EMGs,...
+                             'uncollapsed_filtered_rect_EMGs', uncollapsed_filtered_rect_EMGs,...
+                             'uncollapsed_filtered_UNRECT_EMGs', uncollapsed_filtered_UNRECT_EMGs,...
+                             'sd_collapsed_rect_EMGs', sd_collapsed_rect_EMGs,...
+                             'sd_collapsed_UNRECT_EMGs', sd_collapsed_UNRECT_EMGs,...
+                             'evoked_collapsed_EMGs', evoked_collapsed_EMGs,...
+                             'evoked_collapsed_UNRECT_EMGs', evoked_collapsed_UNRECT_EMGs,...
+                             'mean_collapsed_EMGs', mean_collapsed_EMGs,...
+                             'mean_collapsed_UNRECT_EMGs', mean_collapsed_UNRECT_EMGs,...
+                             'baseline_mean',    baseline_mean,...
+                             'baseline_UNRECT_mean', baseline_UNRECT_mean, ...
+                             'time_axis',        time_axis,...
+                             'blockname',        blockname,...
+                             'num_chan',         num_chan,...
+                             'analyzetimeframe', analyzetimeframe);                  
 
 end
 
