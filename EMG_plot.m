@@ -1,12 +1,12 @@
 % FUNCTION: EMG_plot.m
-% C Ethier, W Ting, Feb 2017
+% C Ethier, W Ting, Jul 2017
 % Purpose: Plot figures with time of data point on the abscissa and
 % EMG data (normed if applicable) on the ordinate, one channel per figure, and pre and post data overlaid on top of each other 
 % INPUTS: PRE_tdtstructure, POST_tdtstructure, mean_norm_rect_EMGs, norm,
 % lowerbound, upperbound
 % OUTPUTS: [Figures: EMG plots]
 
-function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNRECT_flag, ACUTE_flag, ACUTE_preindex, ACUTE_postindex, save ) 
+function [ ] = EMG_plot ( auto, aggregated_data, EMG_vect, xlimit, xrange, yrange, UNRECT_flag, ACUTE_flag, ACUTE_preindex, ACUTE_postindex, save ) 
 
     num_chan = length(EMG_vect);
     num_sess = length(aggregated_data);
@@ -55,10 +55,43 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNR
                 legend(aggregated_data(sess).blockname);
                 title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
                 
-                if save == 1    
+                if save == 1
                     saveas(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.svg']);
                     savefig(gcf, [aggregated_data(1).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_UNRECT_EMG.fig']);
-                end 
+                end
+                
+            elseif auto == 1
+                
+                total_plots         = num_sess;
+                subplot_dimensions  = (ceil(sqrt(num_sess)));
+                
+                total_plots_factors = total_plots + 1;
+                
+                divisors = 1:(total_plots_factors);
+                divisors = divisors(~(rem(total_plots_factors, divisors)));
+                
+                number_of_divisors = size(divisors,2);
+                subplot_dimensions_index_y = number_of_divisors / 2;
+                subplot_dimensions_index_x = subplot_dimensions_index_y + 1;
+                
+                subplot_dimensions_y = divisors(subplot_dimensions_index_y);
+                subplot_dimensions_x = divisors(subplot_dimensions_index_x);
+
+                for i = 1:total_plots
+                    subplot(subplot_dimensions_y,subplot_dimensions_x,i);
+                    plot(aggregated_data(i).time_axis, aggregated_data(i).mean_collapsed_EMGs(:,ch));
+                    xlabel('Time (s)'); ylabel('Mean Rectified EMG Signal (V)');
+                    ylim(yrange);
+                    legend(aggregated_data(i).blockname);
+                    yrange_check = string(yrange);
+                    if yrange_check == 'auto'
+                        title(strrep(sprintf('AUTOscaled Ch %d',ch),'_','\_'));
+                    else
+                        title(strrep(sprintf('SYNCscaled Ch %d',ch),'_','\_'));
+                    end
+                end
+
+                break;
                 
             else
                 
@@ -67,12 +100,12 @@ function [ ] = EMG_plot ( aggregated_data, EMG_vect, xlimit, xrange, yrange, UNR
                 ylim(yrange);
                 legend(aggregated_data(sess).blockname);
                 title(strrep(sprintf('Mean Rect EMG Ch %d',ch),'_','\_'));
-            
+                
                 if save == 1
                     saveas(gcf, [aggregated_data(sess).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.svg']);
                     savefig(gcf, [aggregated_data(sess).blockname '_ch' num2str(ch) '_sess' num2str(sess) '_EMG.fig']);
                 end
-            
+                
             end
                 
         end

@@ -85,7 +85,7 @@ else
     lowerErrors = errors;
     upperErrors = errors;
 end
-    
+
 % Check that the size of "errors" corresponsds to the size of the y-values.
 % Arbitrarily using lower errors as indicative.
 if any(size(values) ~= size(lowerErrors))
@@ -95,7 +95,6 @@ end
 [nRows nCols] = size(values);
 handles.bar = bar(varargin{:}); % standard implementation of bar fn
 
-ax.XMinorTick = 'on'
 hold on
 
 if nRows > 1

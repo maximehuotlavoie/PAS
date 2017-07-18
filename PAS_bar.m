@@ -21,8 +21,7 @@ function PAS_bar ( rem_baseline_flag, EMG_vect, aggregated_data )
     end
 
     barwitherr(sem_evoked_EMG, mean_evoked_EMG);
-    % set(gca,'XTickLabel',{aggregated_data.blockname})
-    
+    set(gca,'XTickLabel',{aggregated_data.blockname});
     
     % write appropriate title overlay depending on what is plotted.
     title(strrep(sprintf(''),'_','\_'));
@@ -98,8 +97,9 @@ function PAS_bar ( rem_baseline_flag, EMG_vect, aggregated_data )
 %     dim = [.62 .5 .3 .3];
 %     annotation('textbox',dim,'String',SEMlabel,'FitBoxToText','on');
 %         
-    legend('Right Extensor', 'Left Extensor');
-    
+    h = legend(string(EMG_vect));
+    v = get(h,'title');
+    set(v,'string','EMG Channel Number');
     %savefig(gcf, [aggregated_data(1).blockname 'bar.fig']);
     %saveas(gcf, [aggregated_data(1).blockname 'bar.svg']);
 

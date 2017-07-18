@@ -8,7 +8,7 @@
 % collected); usernorm (whether the user wants to perform analysis with
 % normalized data or not)
 
-function [ userlower, userupper, EMG_vect, norm, analyzestimdur, analyzeallflag, numbersessions ] = PAS_initparams( )
+function [ userlower, userupper, EMG_vect, norm, analyzestimdur, analyzeallflag, numbersessions, auto ] = PAS_initparams( )
     % Create dialog prompt and save variables. 
     prompt = {'Enter desired lower bound (s):','Enter desired upper bound (s):','Channel Numbers (space delimited):','Proceed with normalized data? (Y/N)','Just analyze stim interval? (Overrides Upper and Lower Bound) (Y/N)','analyze all?','Total number of sessions:'};
     dlg_title = 'Input desired analysis parameters';
@@ -23,6 +23,7 @@ function [ userlower, userupper, EMG_vect, norm, analyzestimdur, analyzeallflag,
     analyzestimdur = params{5};
     analyzeallflag = params{6};
     numbersessions = params{7};
+    auto = 0;
     if strcmpi (norm, 'Y') == 1 || strcmpi (norm, 'yes') == 1
         norm = true;
     elseif strcmpi (norm, 'N') == 1 || strcmpi (norm, 'no') == 1

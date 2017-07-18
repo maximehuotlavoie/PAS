@@ -15,7 +15,7 @@
 % time_axis (horizontal vector with times concordant with the data points
 % collected in the TDT data).
 
-function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower, userupper, analyzestimdur, EMG_vect, muscle_of_interest)
+function processed_data = TDT_preproc ( tdt_struct, auto, rem_baseline_flag, userlower, userupper, analyzestimdur, EMG_vect, muscle_of_interest)
 
     % extract basic info from data structure
     StS_names = fieldnames(tdt_struct.snips);
@@ -98,7 +98,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         all_UNRECT_evoked_EMGs = StS.data(ch_idx,:);
         baseline_UNRECT_mean = mean(all_UNRECT_evoked_EMGs(:,1:stim_onset),2);
         
-        if ch == muscle_of_interest
+        if ch == muscle_of_interest && auto == 0
             
             [valid_stims] = PAS_validate_EMG_responses2(all_evoked_EMGs, time_axis, baseline_mean, valid_stims, muscle_of_interest, tdt_struct); 
             
@@ -149,12 +149,12 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
         mean_collapsed_EMGs(:,ch)        = mean(uncollapsed_filtered_rect_EMGs,1);
         mean_collapsed_UNRECT_EMGs(:,ch) = mean(uncollapsed_filtered_UNRECT_EMGs,1);
 
+        trialstarttime = tdt_struct.info.starttime;
 
     end
     
     evoked_collapsed_EMGs = evoked_collapsed_EMGs(valid_stims,:);
     evoked_collapsed_UNRECT_EMGs = evoked_collapsed_UNRECT_EMGs(valid_UNRECT_stims,:);
- 
         
     % OUTPUT FINAL SUMMARY DATA STRUCTURE
     
@@ -172,6 +172,7 @@ function processed_data = TDT_preproc ( tdt_struct, rem_baseline_flag, userlower
                              'baseline_UNRECT_mean', baseline_UNRECT_mean, ...
                              'time_axis',        time_axis,...
                              'blockname',        blockname,...
+                             'trialstarttime',   trialstarttime,...
                              'num_chan',         num_chan,...
                              'analyzetimeframe', analyzetimeframe);                  
 
